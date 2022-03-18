@@ -1,0 +1,107 @@
+<ul class="alert alert-danger" *ngIf="errores?.length > 0">
+  <li *ngFor="let err of errores">
+    {{ err }}
+  </li>
+</ul>
+
+<form #userForm="ngForm">
+  <div class="card border-primary mb-3" style="max-width: 80rem">
+    <div class="card-header text-center">
+      <i class="fas fa-user-cog"></i> &nbsp;
+      <strong *ngIf="user.id == 0"> {{ titleCreate }}</strong>
+      <strong *ngIf="user.id != 0"> {{ titleEdit }}</strong>
+    </div>
+    <div class="card-body">
+      <form>
+        <div class="form-group">
+          <label for="name">Nombre (*)</label>
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="user.name"
+            name="name"
+            #name="ngModel"
+          />
+          <div
+            class="alert alert-danger"
+            *ngIf="name.invalid && (name.dirty || name.touched)"
+          >
+            <div *ngIf="name.errors['minlength']">
+              Nombre debe tener al menos 4 caracteres
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="rol">Rol (*)</label>
+          <select
+            [compareWith]="comparateRol"
+            class="form-control"
+            [(ngModel)]="user.rol"
+            name="rol"
+            style="width: 500px"
+          >
+            <option [ngValue]="undefined">--- selecionar un rol ---</option>
+            <option *ngFor="let rol of roles" [ngValue]="rol">
+              {{ rol.name }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="Activo">Activo (*)</label>
+          <div class="form-check">
+            <div class="my-3">
+              <label class="form-check-label">
+                <input
+                  type="radio"
+                  class="form-check-input"
+                  [(ngModel)]="user.active"
+                  name="active"
+                  value="S"
+                  ngModel
+                />
+                Si
+              </label>
+              &nbsp; &nbsp; &nbsp;
+              <label class="form-check-label">
+                <input
+                  type="radio"
+                  class="form-check-input"
+                  [(ngModel)]="user.active"
+                  name="active"
+                  value="N"
+                  ngModel
+                />
+                No
+              </label>
+            </div>
+          </div>
+        </div>
+        <button
+          type="submit"
+          class="btn btn-primary"
+          (click)="create()"
+          *ngIf="!user.id; else elseBlock"
+          [disabled]="!userForm.form.valid"
+        >
+          <i class="fas fa-save"></i> Guardar
+        </button>
+        &nbsp;
+        <button type="submit" class="btn btn-danger" [routerLink]="['/users']">
+          <i class="fas fa-arrow-alt-circle-left"></i> Cancelar
+        </button>
+        <ng-template #elseBlock>
+          <button
+            class="btn btn-primary"
+            role="button"
+            (click)="update()"
+            [disabled]="!userForm.form.valid"
+          >
+            Editar
+          </button>
+        </ng-template>
+      </form>
+    </div>
+  </div>
+</form>

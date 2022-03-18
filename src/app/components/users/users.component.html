@@ -1,0 +1,81 @@
+<h2 class="text-center">Listado de usuarios</h2>
+<hr />
+
+<div class="form-group row">
+  <div class="col-sm-6">
+    <button class="btn btn-success" [routerLink]="['/users/form']">
+      <i class="fas fa-plus-square"></i> Crear Usuario
+    </button>
+  </div>
+
+  <div class="col-sm-6 my-3">
+    <form class="d-flex">
+      <input
+        [(ngModel)]="search"
+        name="search"
+        id="search"
+        class="form-control me-sm-2"
+        type="text"
+        placeholder="Digite el nombre del usuario..."
+      />
+      &nbsp;
+      <button
+        class="btn btn-info my-2 my-sm-0"
+        (click)="searchUser(search)"
+        type="submit"
+      >
+        <i class="fas fa-search"></i>
+      </button>
+      &nbsp;
+      <button
+        (click)="clearSearch()"
+        class="btn btn-dark my-2 my-sm-0"
+        type="submit"
+      >
+        <i class="fas fa-eraser"></i>
+      </button>
+    </form>
+  </div>
+</div>
+
+<div *ngIf="users?.length == 0" class="alert alert-info">
+  No hay registros en la base de datos!
+</div>
+
+<table class="table table-hover" *ngIf="users?.length > 0">
+  <thead>
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">Nombre</th>
+      <th scope="col">Rol</th>
+      <th scope="col">Estado</th>
+      <th scope="col">Opcion</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let user of users">
+      <td>{{ user.id }}</td>
+      <td>{{ user.name }}</td>
+      <td>{{ user.rol.name }}</td>
+      <td *ngIf="user.active == 'S'">Activo</td>
+      <td *ngIf="user.active == 'N'">Inactivo</td>
+      <td>
+        <div class="form-group text-center">
+          <a
+            class="btn btn-info buttonAlign"
+            [routerLink]="['/users/form', user.id]"
+          >
+            <i class="fas fa-edit"></i>
+          </a>
+          <a (click)="deleteUser(user)" class="btn btn-danger buttonAlign">
+            <i class="fas fa-trash"></i>
+          </a>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<paginator-nav
+  *ngIf="paginador && users.length > 0"
+  [paginador]="paginador"
+></paginator-nav>
